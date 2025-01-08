@@ -1,12 +1,15 @@
 package com.msmk.linkedin.features.authentication.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity(name = "users")
 public class AuthenticationUser {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
     private String password;
@@ -14,20 +17,9 @@ public class AuthenticationUser {
     public AuthenticationUser(){
     }
     
-    public AuthenticationUser(Long id, String email, String password) {
-        this.id = id;
+    public AuthenticationUser(String email, String password) {
         this.email = email;
         this.password = password;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
 
@@ -48,6 +40,14 @@ public class AuthenticationUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     
