@@ -1,9 +1,13 @@
 package com.msmk.linkedin.features.authentication.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.msmk.linkedin.features.authentication.dto.AuthenticationRequestBody;
+import com.msmk.linkedin.features.authentication.dto.AuthenticationResponseBody;
 import com.msmk.linkedin.features.authentication.model.AuthenticationUser;
 import com.msmk.linkedin.features.authentication.service.AuthenticationService;
 
@@ -21,5 +25,13 @@ public class AuthenticationController {
     @GetMapping("/user")
     public AuthenticationUser getUser() {
         return authenticationService.getUser("sai@example.com");
-    }   
+    }
+
+    @PostMapping("/register")
+    public AuthenticationResponseBody registerPage(@RequestBody AuthenticationRequestBody registerRequestBody) {
+        return authenticationService.register(registerRequestBody);
+    }
+
+    
+    
 }
