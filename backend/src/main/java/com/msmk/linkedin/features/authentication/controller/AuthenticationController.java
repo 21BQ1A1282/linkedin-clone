@@ -11,6 +11,8 @@ import com.msmk.linkedin.features.authentication.dto.AuthenticationResponseBody;
 import com.msmk.linkedin.features.authentication.model.AuthenticationUser;
 import com.msmk.linkedin.features.authentication.service.AuthenticationService;
 
+import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/api/v1/authentication")
@@ -27,8 +29,14 @@ public class AuthenticationController {
         return authenticationService.getUser("sai@example.com");
     }
 
+    @PostMapping("/login")
+    public AuthenticationResponseBody loginPage(@Valid @RequestBody AuthenticationRequestBody loginRequestBody) {
+        return authenticationService.login(loginRequestBody);
+    }
+
+
     @PostMapping("/register")
-    public AuthenticationResponseBody registerPage(@RequestBody AuthenticationRequestBody registerRequestBody) {
+    public AuthenticationResponseBody registerPage(@Valid @RequestBody AuthenticationRequestBody registerRequestBody) {
         return authenticationService.register(registerRequestBody);
     }
 
