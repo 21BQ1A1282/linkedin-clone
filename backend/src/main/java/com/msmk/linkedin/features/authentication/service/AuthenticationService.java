@@ -30,15 +30,16 @@ public class AuthenticationService {
 
     public AuthenticationResponseBody register(AuthenticationRequestBody registerRequestBody) {
         authenticationUserRepository.save(new AuthenticationUser(registerRequestBody.getEmail(),encoder.encode(registerRequestBody.getPassword())));
-        return new AuthenticationResponseBody("token","User registered successfully");
+        String token = jsonWebToken.generateToken(registerRequestBody.getEmail());
+        return new AuthenticationResponseBody(token,"User registered successfully");
     }
 
     public AuthenticationResponseBody login(AuthenticationRequestBody loginRequestBody) {
-        AuthenticationUser user = authenticationUserRepository.findByEmail(loginRequestBody.getEmail()).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        if (encoder.matches(loginRequestBody.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("password is incorrect");
+        AuthenticationUser user = authenticationUserRepository.findByEmail(loginRequestBody.getEmail()).orElseThrow(() -> new IllegalArgumentException("User not found."));
+        if (!encoder.matches(loginRequestBody.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Password is incorrect.");
         }
         String token = jsonWebToken.generateToken(loginRequestBody.getEmail());
-        return new AuthenticationResponseBody(token, "Authentication Succeeded!!");
+        return new AuthenticationResponseBody(token, "Authentication succeeded.");
     }
 }
