@@ -24,7 +24,7 @@ public class AuthenticationService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
     private final AuthenticationUserRepository authenticationUserRepository;
-    private final int durationInMinutes = 1;
+    private final int durationInMinutes = 3;
 
     private final Encoder encoder;
     private final JsonWebToken jsonWebToken;
