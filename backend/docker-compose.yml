@@ -1,0 +1,13 @@
+services:
+  mysql:
+    image: mysql:8.0  # Fixed version
+    environment:
+      MYSQL_DATABASE: springstudent
+      MYSQL_ROOT_PASSWORD: springstudent82
+    ports:
+      - '3306:3306'
+  mailhog:
+    image: mailhog/mailhog:latest  # Explicitly specify the latest tag
+    ports:
+      - '1025:1025'
+      - '8025:8025'  # Web UI for viewing emails

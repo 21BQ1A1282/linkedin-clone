@@ -31,6 +31,13 @@ public class AuthenticationUser {
     private String password;
     private String passwordResetToken = null;
     private LocalDateTime passwordResetTokenExpiryDate = null;
+
+    private String firstName=null;
+    private String lastName=null;
+    private String company=null;
+    private String position=null;
+    private String location=null;
+    private Boolean profileComplete=false;
     
     public AuthenticationUser(){
     }
@@ -104,8 +111,64 @@ public class AuthenticationUser {
         this.passwordResetTokenExpiryDate = passwordResetTokenExpiryDate;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+        updateProfileCompletionStatus();
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+        updateProfileCompletionStatus();
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+        updateProfileCompletionStatus();
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+        updateProfileCompletionStatus();
+    }
+
+
+    public void updateProfileCompletionStatus() {
+        this.profileComplete = (this.firstName != null && this.lastName != null && this.company != null
+                && this.position != null && this.location != null);
+    }
+
+    public Boolean getProfileComplete() {
+        return profileComplete;
+    }
+
+    public void setProfileComplete(Boolean profileComplete) {
+        this.profileComplete = profileComplete;
+    }
 
     
-
     
 }
