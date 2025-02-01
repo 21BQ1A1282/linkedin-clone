@@ -1,14 +1,18 @@
 package com.msmk.linkedin.features.authentication.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.msmk.linkedin.features.feed.model.Post;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
@@ -38,6 +42,12 @@ public class AuthenticationUser {
     private String position=null;
     private String location=null;
     private Boolean profileComplete=false;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "author",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Post> posts;
+
+    
     
     public AuthenticationUser(){
     }
@@ -167,6 +177,14 @@ public class AuthenticationUser {
 
     public void setProfileComplete(Boolean profileComplete) {
         this.profileComplete = profileComplete;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
     

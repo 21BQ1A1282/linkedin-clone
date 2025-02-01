@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.msmk.linkedin.dto.Response;
 import com.msmk.linkedin.features.authentication.dto.AuthenticationRequestBody;
 import com.msmk.linkedin.features.authentication.dto.AuthenticationResponseBody;
 import com.msmk.linkedin.features.authentication.model.AuthenticationUser;
@@ -47,9 +46,9 @@ public class AuthenticationController {
     }
 
     @DeleteMapping("/delete")
-    public Response deleteUser(@RequestAttribute("authenticatedUser") AuthenticationUser user) {
+    public String deleteUser(@RequestAttribute("authenticatedUser") AuthenticationUser user) {
         authenticationService.deleteUser(user.getId());
-        return new Response("User deleted successfully.");
+        return "User deleted successfully.";
     }
     
     @GetMapping("/user")
