@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.msmk.linkedin.features.authentication.model.AuthenticationUser;
+import com.msmk.linkedin.features.feed.dto.CommentDto;
 import com.msmk.linkedin.features.feed.dto.PostDto;
+import com.msmk.linkedin.features.feed.model.Comment;
 import com.msmk.linkedin.features.feed.model.Post;
 import com.msmk.linkedin.features.feed.service.FeedService;
 
@@ -72,4 +74,39 @@ public class FeedController {
         List<Post> posts = feedService.getPostsByUserId(userId);
         return ResponseEntity.ok(posts);
     }
+
+    @PutMapping("/posts/{postId}/like")
+    public ResponseEntity<Post> likePost(@PathVariable Long postId, @RequestAttribute("authenticatedUser") AuthenticationUser user) {
+        Post post = feedService.likePost(postId, user.getId());
+        return ResponseEntity.ok(post);
+    }
+
+    @GetMapping("/posts/{postId}/comments")
+    public ResponseEntity<List<Comment>> getComments(@PathVariable Long postId) {
+        List<Comment> comments = feedService.getPostComments(postId);
+        return ResponseEntity.ok(comments);
+    }
+
+
+    @PostMapping("/posts/{postId}/comments")
+    public ResponseEntity<Comment> addComment(@PathVariable Long postId, @RequestBody CommentDto commentDto,
+            @RequestAttribute("authenticatedUser") AuthenticationUser user) {
+        Comment comment = feedService.addComment(postId, user.getId(), commentDto.getContent());
+        return ResponseEntity.ok(comment);
+    }
+
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId,
+            @RequestAttribute("authenticatedUser") AuthenticationUser user) {
+        feedService.deleteComment(commentId, user.getId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/comments/{commentId}")
+    public ResponseEntity<Comment> editComment(@PathVariable Long commentId, @RequestBody CommentDto commentDto,
+            @RequestAttribute("authenticatedUser") AuthenticationUser user) {
+        Comment comment = feedService.editComment(commentId, user.getId(), commentDto.getContent());
+        return ResponseEntity.ok(comment);
+    }
+
 }

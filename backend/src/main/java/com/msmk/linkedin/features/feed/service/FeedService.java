@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import com.msmk.linkedin.features.authentication.model.AuthenticationUser;
 import com.msmk.linkedin.features.authentication.repository.AuthenticationUserRepository;
 import com.msmk.linkedin.features.feed.dto.PostDto;
+import com.msmk.linkedin.features.feed.model.Comment;
 import com.msmk.linkedin.features.feed.model.Post;
+import com.msmk.linkedin.features.feed.repository.CommentRepository;
 import com.msmk.linkedin.features.feed.repository.PostRepository;
 
 @Service
@@ -15,10 +17,12 @@ public class FeedService {
 
     private final PostRepository postRepository;
     private final AuthenticationUserRepository authenticationUserRepository;
+    private final CommentRepository commentRepository;
 
-    public FeedService(PostRepository postRepository, AuthenticationUserRepository authenticationUserRepository) {
+    public FeedService(PostRepository postRepository, AuthenticationUserRepository authenticationUserRepository,CommentRepository commentRepository) {
         this.postRepository = postRepository;
         this.authenticationUserRepository = authenticationUserRepository;
+        this.commentRepository = commentRepository;
     }
 
     public Post createPost(PostDto postDto, Long authorId) {
@@ -65,6 +69,55 @@ public class FeedService {
 
     public List<Post> getPostsByUserId(Long userId) {
         return postRepository.findByAuthorId(userId);
+    }
+
+    public Post likePost(Long postId, Long userId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("Post not found"));
+        AuthenticationUser user = authenticationUserRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        if (post.getLikes().contains(user)) {
+            post.getLikes().remove(user);
+        } else {
+            post.getLikes().add(user);
+        }
+        Post savedPost = postRepository.save(post);
+        return savedPost;
+    }
+
+    public Comment addComment(Long postId, Long userId, String content) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("Post not found"));
+        AuthenticationUser user = authenticationUserRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Comment comment = new Comment(post, user, content);
+        return commentRepository.save(comment);
+    }
+
+    public void deleteComment(Long commentId, Long userId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+        AuthenticationUser user = authenticationUserRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        if (!comment.getAuthor().equals(user)) {
+            throw new IllegalArgumentException("User is not the author of the comment");
+        }
+        commentRepository.delete(comment);
+    }
+
+    public Comment editComment(Long commentId, Long userId, String newContent) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+        AuthenticationUser user = authenticationUserRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        if (!comment.getAuthor().equals(user)) {
+            throw new IllegalArgumentException("User is not the author of the comment");
+        }
+        comment.setContent(newContent);
+        return commentRepository.save(comment);
+    }
+
+    public List<Comment> getPostComments(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("Post not found"));
+        return post.getComments();
     }
 
 }

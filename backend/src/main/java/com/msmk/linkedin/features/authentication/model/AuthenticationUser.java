@@ -43,6 +43,16 @@ public class AuthenticationUser {
     private String location=null;
     private Boolean profileComplete=false;
 
+    private String profilePicture;
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
     @JsonIgnore
     @OneToMany(mappedBy = "author",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Post> posts;

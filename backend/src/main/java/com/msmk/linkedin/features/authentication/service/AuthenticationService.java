@@ -18,6 +18,7 @@ import com.msmk.linkedin.features.authentication.utils.JsonWebToken;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 
 @Service
 public class AuthenticationService {
@@ -189,8 +190,15 @@ public class AuthenticationService {
         return authenticationUserRepository.save(user);
     }
 
+    @Transactional
     public void deleteUser(Long userId) {
-        authenticationUserRepository.deleteById(userId);
+        AuthenticationUser user = entityManager.find(AuthenticationUser.class, userId);
+        if (user != null) {
+            entityManager.createNativeQuery("DELETE FROM posts_likes WHERE user_id = :userId")
+                    .setParameter("userId", userId)
+                    .executeUpdate();
+            entityManager.remove(user);
+        }
     }
 
 }
