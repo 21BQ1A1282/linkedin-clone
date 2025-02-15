@@ -8,6 +8,6 @@ public class LinkedinApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(LinkedinApplication.class, args);
-	}
+	}  
 
 }

@@ -12,6 +12,7 @@ import com.msmk.linkedin.features.feed.model.Comment;
 import com.msmk.linkedin.features.feed.model.Post;
 import com.msmk.linkedin.features.feed.repository.CommentRepository;
 import com.msmk.linkedin.features.feed.repository.PostRepository;
+import com.msmk.linkedin.features.notifications.service.NotificationService;
 
 @Service
 public class FeedService {
@@ -19,11 +20,13 @@ public class FeedService {
     private final PostRepository postRepository;
     private final AuthenticationUserRepository authenticationUserRepository;
     private final CommentRepository commentRepository;
+    private final NotificationService notificationService;
 
-    public FeedService(PostRepository postRepository, AuthenticationUserRepository authenticationUserRepository,CommentRepository commentRepository) {
+    public FeedService(PostRepository postRepository, AuthenticationUserRepository authenticationUserRepository,CommentRepository commentRepository, NotificationService notificationService) {
         this.postRepository = postRepository;
         this.authenticationUserRepository = authenticationUserRepository;
         this.commentRepository = commentRepository;
+        this.notificationService = notificationService;
     }
 
     public Post createPost(PostDto postDto, Long authorId) {
@@ -80,17 +83,20 @@ public class FeedService {
             post.getLikes().remove(user);
         } else {
             post.getLikes().add(user);
+            notificationService.sendLikeNotification(user, post.getAuthor(), post.getId());
         }
         Post savedPost = postRepository.save(post);
+        notificationService.sendLikeToPost(postId, savedPost.getLikes());
         return savedPost;
     }
 
     public Comment addComment(Long postId, Long userId, String content) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("Post not found"));
-        AuthenticationUser user = authenticationUserRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Comment comment = new Comment(post, user, content);
-        return commentRepository.save(comment);
+        AuthenticationUser user = authenticationUserRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Comment comment = commentRepository.save(new Comment(post, user, content));
+        notificationService.sendCommentNotification(user, post.getAuthor(), post.getId());
+        notificationService.sendCommentToPost(postId, comment);
+        return comment;
     }
 
     public void deleteComment(Long commentId, Long userId) {
