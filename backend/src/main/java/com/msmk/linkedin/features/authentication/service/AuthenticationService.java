@@ -2,6 +2,7 @@ package com.msmk.linkedin.features.authentication.service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -199,6 +200,10 @@ public class AuthenticationService {
                     .executeUpdate();
             entityManager.remove(user);
         }
+    }
+
+    public List<AuthenticationUser> getUsersWithoutAuthenticated(AuthenticationUser authenticationUser) {
+        return authenticationUserRepository.findAllByIdNot(authenticationUser.getId());
     }
 
 }

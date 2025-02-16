@@ -1,6 +1,7 @@
 package com.msmk.linkedin.features.authentication.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -97,6 +98,12 @@ public class AuthenticationController {
         }
 
         return authenticationService.updateUserProfile(id, firstName, lastName, company, position, location);
+    }
+
+
+    @GetMapping("/users")
+    public List<AuthenticationUser> getUsersWithoutAuthenticated(@RequestAttribute("authenticatedUser") AuthenticationUser authenticationUser) {
+        return authenticationService.getUsersWithoutAuthenticated(authenticationUser);
     }
 
 }

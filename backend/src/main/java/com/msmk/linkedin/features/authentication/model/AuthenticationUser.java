@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.msmk.linkedin.features.feed.model.Post;
+import com.msmk.linkedin.features.messaging.model.Conversation;
 import com.msmk.linkedin.features.notifications.model.Notification;
 
 import jakarta.persistence.CascadeType;
@@ -55,11 +56,17 @@ public class AuthenticationUser {
     @OneToMany(mappedBy = "actor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> actedNotifications;
 
-    
-
     @JsonIgnore
     @OneToMany(mappedBy = "author",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Post> posts;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Conversation> conversationsAsAuthor;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Conversation> conversationsAsRecipient;
     
     public AuthenticationUser(){
     }
@@ -223,8 +230,20 @@ public class AuthenticationUser {
         this.actedNotifications = actedNotifications;
     }
 
-    
+    public List<Conversation> getConversationsAsAuthor() {
+        return conversationsAsAuthor;
+    }
 
-    
+    public void setConversationsAsAuthor(List<Conversation> conversationsAsAuthor) {
+        this.conversationsAsAuthor = conversationsAsAuthor;
+    }
+
+    public List<Conversation> getConversationsAsRecipient() {
+        return conversationsAsRecipient;
+    }
+
+    public void setConversationsAsRecipient(List<Conversation> conversationsAsRecipient) {
+        this.conversationsAsRecipient = conversationsAsRecipient;
+    }
     
 }
