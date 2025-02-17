@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.msmk.linkedin.features.authentication.model.AuthenticationUser;
 import com.msmk.linkedin.features.feed.model.Comment;
+import com.msmk.linkedin.features.messaging.model.Conversation;
+import com.msmk.linkedin.features.messaging.model.Message;
 import com.msmk.linkedin.features.notifications.model.Notification;
 import com.msmk.linkedin.features.notifications.model.NotificationType;
 import com.msmk.linkedin.features.notifications.repository.NotificationRepository;
@@ -69,6 +71,15 @@ public class NotificationService {
 
     public void sendCommentToPost(Long postId, Comment comment) {
         messagingTemplate.convertAndSend("/topic/comments/" + postId, comment);
+    }
+
+    public void sendConversationToUsers(Long senderId, Long receiverId, Conversation conversation) {
+        messagingTemplate.convertAndSend("/topic/users/" + senderId + "/conversations", conversation);
+        messagingTemplate.convertAndSend("/topic/users/" + receiverId + "/conversations", conversation);
+    }
+
+    public void sendMessageToConversation(Long conversationId, Message message) {
+        messagingTemplate.convertAndSend("/topic/conversations/" + conversationId + "/messages", message);
     }
 
 }

@@ -206,4 +206,9 @@ public class AuthenticationService {
         return authenticationUserRepository.findAllByIdNot(authenticationUser.getId());
     }
 
+    public AuthenticationUser getUserById(Long receiverId) {
+        return authenticationUserRepository.findById(receiverId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found."));
+    }
+
 }
