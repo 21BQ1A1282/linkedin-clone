@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.msmk.linkedin.features.feed.model.Post;
 import com.msmk.linkedin.features.messaging.model.Conversation;
+import com.msmk.linkedin.features.networking.model.Connection;
 import com.msmk.linkedin.features.notifications.model.Notification;
 
 import jakarta.persistence.CascadeType;
@@ -67,7 +68,17 @@ public class AuthenticationUser {
     @JsonIgnore
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Conversation> conversationsAsRecipient;
-    
+
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Connection> initiatedConnections;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Connection> receivedConnections;
+
+
     public AuthenticationUser(){
     }
     
@@ -245,5 +256,22 @@ public class AuthenticationUser {
     public void setConversationsAsRecipient(List<Conversation> conversationsAsRecipient) {
         this.conversationsAsRecipient = conversationsAsRecipient;
     }
+
+    public List<Connection> getInitiatedConnections() {
+        return initiatedConnections;
+    }
+
+    public void setInitiatedConnections(List<Connection> initiatedConnections) {
+        this.initiatedConnections = initiatedConnections;
+    }
+
+    public List<Connection> getReceivedConnections() {
+        return receivedConnections;
+    }
+
+    public void setReceivedConnections(List<Connection> receivedConnections) {
+        this.receivedConnections = receivedConnections;
+    }
+
     
 }

@@ -10,6 +10,7 @@ import com.msmk.linkedin.features.authentication.model.AuthenticationUser;
 import com.msmk.linkedin.features.feed.model.Comment;
 import com.msmk.linkedin.features.messaging.model.Conversation;
 import com.msmk.linkedin.features.messaging.model.Message;
+import com.msmk.linkedin.features.networking.model.Connection;
 import com.msmk.linkedin.features.notifications.model.Notification;
 import com.msmk.linkedin.features.notifications.model.NotificationType;
 import com.msmk.linkedin.features.notifications.repository.NotificationRepository;
@@ -80,6 +81,26 @@ public class NotificationService {
 
     public void sendMessageToConversation(Long conversationId, Message message) {
         messagingTemplate.convertAndSend("/topic/conversations/" + conversationId + "/messages", message);
+    }
+
+    public void sendNewInvitationToUsers(Long senderId, Long receiverId, Connection connection) {
+        messagingTemplate.convertAndSend("/topic/users/" + receiverId + "/connections/new", connection);
+        messagingTemplate.convertAndSend("/topic/users/" + senderId + "/connections/new", connection);
+    }
+
+
+    public void sendInvitationAcceptedToUsers(Long senderId, Long receiverId, Connection connection) {
+        messagingTemplate.convertAndSend("/topic/users/" + receiverId + "/connections/accepted", connection);
+        messagingTemplate.convertAndSend("/topic/users/" + senderId + "/connections/accepted", connection);
+    }
+
+    public void sendRemoveConnectionToUsers(Long senderId, Long receiverId, Connection connection) {
+        messagingTemplate.convertAndSend("/topic/users/" + receiverId + "/connections/remove", connection);
+        messagingTemplate.convertAndSend("/topic/users/" + senderId + "/connections/remove", connection);
+    }
+
+    public void sendConnectionSeenNotification(Long id, Connection connection) {
+        messagingTemplate.convertAndSend("/topic/users/" + id + "/connections/seen", connection);
     }
 
 }
