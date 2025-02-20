@@ -28,6 +28,13 @@ public class ConnectionService {
         this.notificationService = notificationService;
     }
 
+    public List<Connection> getUserConnections(Long userId, Status status) {
+        AuthenticationUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return connectionRepository.findConnectionsByUserAndStatus(user, status != null ? status : Status.ACCEPTED);
+    }
+
+
     public List<Connection> getUserConnections(AuthenticationUser user, Status status) {
         return connectionRepository.findConnectionsByUserAndStatus(user, status != null ? status : Status.ACCEPTED);
     }
@@ -185,5 +192,6 @@ public class ConnectionService {
 
     private record UserRecommendation(AuthenticationUser user, double score) {
     }
+
 
 }

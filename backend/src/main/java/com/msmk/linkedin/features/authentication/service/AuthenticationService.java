@@ -173,7 +173,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationUser updateUserProfile(Long userId, String firstName, String lastName, String company,
-                                  String position, String location) {
+                                  String position, String location, String profilePicture, String coverPicture, String about) {
         AuthenticationUser user = authenticationUserRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (firstName != null)
@@ -186,10 +186,16 @@ public class AuthenticationService {
             user.setPosition(position);
         if (location != null)
             user.setLocation(location);
-        
+        if (profilePicture != null)
+            user.setProfilePicture(profilePicture);
+        if (coverPicture != null)
+            user.setCoverPicture(coverPicture);
+        if (about != null)
+            user.setAbout(about);
 
         return authenticationUserRepository.save(user);
     }
+
 
     @Transactional
     public void deleteUser(Long userId) {

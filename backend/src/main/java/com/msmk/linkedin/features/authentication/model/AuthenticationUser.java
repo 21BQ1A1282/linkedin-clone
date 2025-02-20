@@ -44,10 +44,12 @@ public class AuthenticationUser {
     private String company=null;
     private String position=null;
     private String location=null;
+    private String profilePicture=null;
+    private String coverPicture=null;
     private Boolean profileComplete=false;
+    private String about=null;
 
-    private String profilePicture;
-
+    
 
     @JsonIgnore
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -271,6 +273,22 @@ public class AuthenticationUser {
 
     public void setReceivedConnections(List<Connection> receivedConnections) {
         this.receivedConnections = receivedConnections;
+    }
+
+    public String getCoverPicture() {
+        return coverPicture;
+    }
+
+    public void setCoverPicture(String coverPicture) {
+        this.coverPicture = coverPicture;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
     }
 
     

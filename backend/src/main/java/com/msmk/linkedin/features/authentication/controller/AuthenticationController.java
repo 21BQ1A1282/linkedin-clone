@@ -90,15 +90,19 @@ public class AuthenticationController {
             @RequestParam(required = false) String lastName,
             @RequestParam(required = false) String company,
             @RequestParam(required = false) String position,
-            @RequestParam(required = false) String location) {
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String profilePicture,
+            @RequestParam(required = false) String coverPicture,
+            @RequestParam(required = false) String about) {
 
         if (!user.getId().equals(id)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "User does not have permission to update this profile.");
         }
 
-        return authenticationService.updateUserProfile(id, firstName, lastName, company, position, location);
+        return authenticationService.updateUserProfile(id, firstName, lastName, company, position, location, profilePicture, coverPicture, about);
     }
+
 
 
     @GetMapping("/users")
