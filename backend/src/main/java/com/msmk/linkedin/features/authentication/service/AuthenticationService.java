@@ -3,22 +3,11 @@ package com.msmk.linkedin.features.authentication.service;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.msmk.linkedin.features.authentication.dto.AuthenticationRequestBody;
@@ -29,7 +18,6 @@ import com.msmk.linkedin.features.authentication.utils.EmailService;
 import com.msmk.linkedin.features.authentication.utils.Encoder;
 import com.msmk.linkedin.features.authentication.utils.JsonWebToken;
 
-import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -50,10 +38,10 @@ public class AuthenticationService {
     @PersistenceContext
     private EntityManager entityManager;
 
-     @Value("${oauth.google.client.id}")
-    private String googleClientId;
-    @Value("${oauth.google.client.secret}")
-    private String googleClientSecret;
+    // @Value("${oauth.google.client.id}")
+    // private String googleClientId;
+    // @Value("${oauth.google.client.secret}")
+    // private String googleClientSecret;
 
     public AuthenticationService(AuthenticationUserRepository authenticationUserRepository, Encoder encoder, JsonWebToken jsonWebToken, EmailService emailService, RestTemplate restTemplate) {
         this.authenticationUserRepository = authenticationUserRepository;
@@ -238,49 +226,49 @@ public class AuthenticationService {
     }
 
 
-    public AuthenticationResponseBody googleLoginOrSignup(String code, String page) {
-        String tokenEndpoint = "https://oauth2.googleapis.com/token";
-        String redirectUri = "http://localhost:5173/authentication/" + page;
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+    // public AuthenticationResponseBody googleLoginOrSignup(String code, String page) {
+    //     String tokenEndpoint = "https://oauth2.googleapis.com/token";
+    //     String redirectUri = "http://localhost:5173/authentication/" + page;
+    //     MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 
-        body.add("code", code);
-        body.add("client_id", googleClientId);
-        body.add("client_secret", googleClientSecret);
-        body.add("redirect_uri", redirectUri);
-        body.add("grant_type", "authorization_code");
+    //     body.add("code", code);
+    //     body.add("client_id", googleClientId);
+    //     body.add("client_secret", googleClientSecret);
+    //     body.add("redirect_uri", redirectUri);
+    //     body.add("grant_type", "authorization_code");
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+    //     HttpHeaders headers = new HttpHeaders();
+    //     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+    //     HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
-        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(tokenEndpoint, HttpMethod.POST, request,
-                new ParameterizedTypeReference<>() {
-                });
+    //     ResponseEntity<Map<String, Object>> response = restTemplate.exchange(tokenEndpoint, HttpMethod.POST, request,
+    //             new ParameterizedTypeReference<>() {
+    //             });
 
-        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            Map<String, Object> responseBody = response.getBody();
-            String idToken = (String) responseBody.get("id_token");
+    //     if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+    //         Map<String, Object> responseBody = response.getBody();
+    //         String idToken = (String) responseBody.get("id_token");
 
-            Claims claims = jsonWebToken.getClaimsFromGoogleOauthIdToken(idToken);
-            String email = claims.get("email", String.class);
-            AuthenticationUser user = authenticationUserRepository.findByEmail(email).orElse(null);
+    //         Claims claims = jsonWebToken.getClaimsFromGoogleOauthIdToken(idToken);
+    //         String email = claims.get("email", String.class);
+    //         AuthenticationUser user = authenticationUserRepository.findByEmail(email).orElse(null);
 
-            if (user == null) {
-                Boolean emailVerified = claims.get("email_verified", Boolean.class);
-                String firstName = claims.get("given_name", String.class);
-                String lastName = claims.get("family_name", String.class);
-                AuthenticationUser newUser = new AuthenticationUser(email, null);
-                newUser.setEmailVerified(emailVerified);
-                newUser.setFirstName(firstName);
-                newUser.setLastName(lastName);
-                authenticationUserRepository.save(newUser);
-            }
+    //         if (user == null) {
+    //             Boolean emailVerified = claims.get("email_verified", Boolean.class);
+    //             String firstName = claims.get("given_name", String.class);
+    //             String lastName = claims.get("family_name", String.class);
+    //             AuthenticationUser newUser = new AuthenticationUser(email, null);
+    //             newUser.setEmailVerified(emailVerified);
+    //             newUser.setFirstName(firstName);
+    //             newUser.setLastName(lastName);
+    //             authenticationUserRepository.save(newUser);
+    //         }
 
-            String token = jsonWebToken.generateToken(email);
-            return new AuthenticationResponseBody(token, "Google authentication succeeded.");
-        } else {
-            throw new IllegalArgumentException("Failed to exchange code for ID token.");
-        }
-    }
+    //         String token = jsonWebToken.generateToken(email);
+    //         return new AuthenticationResponseBody(token, "Google authentication succeeded.");
+    //     } else {
+    //         throw new IllegalArgumentException("Failed to exchange code for ID token.");
+    //     }
+    // }
 
 }

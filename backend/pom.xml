@@ -46,6 +46,26 @@
     </dependency>
 
 	<dependency>
+        <groupId>org.hibernate.search</groupId>
+        <artifactId>hibernate-search-mapper-orm</artifactId>
+        <version>7.2.2.Final</version>
+    </dependency>
+
+    <!-- Hibernate Search Backend Lucene -->
+    <dependency>
+        <groupId>org.hibernate.search</groupId>
+        <artifactId>hibernate-search-backend-lucene</artifactId>
+        <version>7.2.2.Final</version>
+    </dependency>
+
+    <!-- JBoss Logging -->
+    <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging</artifactId>
+        <version>3.6.1.Final</version>
+    </dependency>
+
+	<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>

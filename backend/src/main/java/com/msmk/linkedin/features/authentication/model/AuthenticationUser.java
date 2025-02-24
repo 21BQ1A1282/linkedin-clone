@@ -3,6 +3,9 @@ package com.msmk.linkedin.features.authentication.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.msmk.linkedin.features.feed.model.Post;
 import com.msmk.linkedin.features.messaging.model.Conversation;
@@ -20,6 +23,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 @Entity(name = "users")
+@Indexed(index = "users")
 public class AuthenticationUser {
 
      @Id
@@ -39,9 +43,13 @@ public class AuthenticationUser {
     private String passwordResetToken = null;
     private LocalDateTime passwordResetTokenExpiryDate = null;
 
+    @FullTextField(analyzer = "standard")
     private String firstName=null;
+    @FullTextField(analyzer = "standard")
     private String lastName=null;
+    @FullTextField(analyzer = "standard")
     private String company=null;
+    @FullTextField(analyzer = "standard")
     private String position=null;
     private String location=null;
     private String profilePicture=null;

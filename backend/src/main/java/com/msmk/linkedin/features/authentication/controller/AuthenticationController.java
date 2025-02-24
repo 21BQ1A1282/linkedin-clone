@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.msmk.linkedin.features.authentication.dto.AuthenticationOauthRequestBody;
 import com.msmk.linkedin.features.authentication.dto.AuthenticationRequestBody;
 import com.msmk.linkedin.features.authentication.dto.AuthenticationResponseBody;
 import com.msmk.linkedin.features.authentication.model.AuthenticationUser;
@@ -36,10 +35,10 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/oauth/google/login")
-    public AuthenticationResponseBody googleLogin(@RequestBody AuthenticationOauthRequestBody oauth2RequestBody) {
-        return authenticationService.googleLoginOrSignup(oauth2RequestBody.code(), oauth2RequestBody.page());
-    }
+    // @PostMapping("/oauth/google/login")
+    // public AuthenticationResponseBody googleLogin(@RequestBody AuthenticationOauthRequestBody oauth2RequestBody) {
+    //     return authenticationService.googleLoginOrSignup(oauth2RequestBody.code(), oauth2RequestBody.page());
+    // }
 
     @PostMapping("/login")
     public AuthenticationResponseBody loginPage(@Valid @RequestBody AuthenticationRequestBody loginRequestBody) {
